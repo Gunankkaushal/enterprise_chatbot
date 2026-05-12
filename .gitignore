@@ -1,0 +1,5 @@
+﻿venv/
+__pycache__/
+.env
+uploads/
+vectorstore/faiss_index/index.faiss
