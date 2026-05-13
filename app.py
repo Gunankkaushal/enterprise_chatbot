@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 from services.pdf_loader import load_and_split_pdf
 from services.embedder import create_vector_store
 from services.chatbot import load_chatbot
-from services.mongo_service import documents_collection
-from services.mongo_service import chat_collection
+from services.database.db_connection import documents_collection
+from services.database.db_connection import chat_collection
 load_dotenv()
 
 

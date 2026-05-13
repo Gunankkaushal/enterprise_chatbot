@@ -2,7 +2,7 @@ fastapi>=0.110.0
 uvicorn>=0.30.0
 python-dotenv>=1.0.1
 requests>=2.32.0
-pymongo>=4.7.0
+sqlalchemy
 pypdf>=4.2.0
 faiss-cpu>=1.8.0
 numpy>=1.26.0
@@ -10,3 +10,7 @@ langchain-community>=0.2.0
 langchain-classic>=0.2.0
 langchain-ollama>=0.1.0
 sentence-transformers>=2.7.0
+pydantic
+pydantic[email]
+pyjwt
+passlib
