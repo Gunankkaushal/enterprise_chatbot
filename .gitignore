@@ -1,8 +1,7 @@
 ﻿venv/
 __pycache__/
 .env
-uploads/
-vectorstore/
+store/
 *.db
 *.db-shm
 *.db-wal

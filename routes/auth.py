@@ -1,6 +1,5 @@
 import os
 import logging
-import time
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -99,7 +98,7 @@ def create_access_token(data: dict) -> str:
 
         raise HTTPException(
             status_code=500,
-            detail="Could not create access token"
+            detail="Could not create access token."
         )
 
 
@@ -125,7 +124,7 @@ def get_current_user(res: HTTPAuthorizationCredentials = Depends(security), db: 
         if not user:
             raise HTTPException(
                 status_code=401,
-                detail="User not found"
+                detail="User not found."
             )
 
         return user
@@ -134,7 +133,7 @@ def get_current_user(res: HTTPAuthorizationCredentials = Depends(security), db: 
 
         raise HTTPException(
             status_code=401,
-            detail="Could not validate credentials"
+            detail="Could not validate credentials."
         )
 
 
