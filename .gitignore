@@ -1,5 +1,7 @@
 ﻿venv/
 __pycache__/
 .env
-uploads/
-vectorstore/faiss_index/index.faiss
+store/
+*.db
+*.db-shm
+*.db-wal
