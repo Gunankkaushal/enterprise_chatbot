@@ -12,7 +12,11 @@ from config import UPLOAD_DIR
 from utils.helpers import calculate_file_hash
 from utils.parsers import extract_and_clean_document
 from services.embedding import get_text_nodes, generate_embeddings
-from services.vector_store import load_or_create_faiss_index, save_faiss_index
+from services.vector_store import (
+    load_or_create_faiss_index,
+    save_faiss_index,
+    add_embeddings_with_metadata
+)
 
 uploadrouter = APIRouter(
     prefix="/upload",
@@ -61,10 +65,9 @@ async def upload_document(department_id: int = Form(...), file: UploadFile = Fil
         embedding_dimension
     )
     
-    index.add(embeddings)
-    
+    new_metadata = []
     for node in nodes:
-        metadata.append({
+        new_metadata.append({
             "text": node.text,
             "source": node.metadata.get("file_name"),
             "department_id": department.id,
@@ -72,7 +75,14 @@ async def upload_document(department_id: int = Form(...), file: UploadFile = Fil
             "page_number": node.metadata.get("page_number"),
             "chunk_number": node.metadata.get("chunk_number")
         })
-        
+
+    add_embeddings_with_metadata(
+        index=index,
+        metadata=metadata,
+        embeddings=embeddings,
+        new_metadata=new_metadata
+    )
+
     save_faiss_index(index, metadata, index_path, metadata_path)
 
     new_document = Document(

@@ -53,7 +53,7 @@ def retrieve_top_k_chunks(query: str, department_id: int, db: Session, top_k: in
             if chunk_data.get("department_id") != department_id:
                 continue
             
-            node_text = chunk_data.pop("text", "")
+            node_text = chunk_data.get("text", "")
             
             chunk_metadata = chunk_data.copy()
             chunk_metadata["distance_score"] = float(distances[0][i])

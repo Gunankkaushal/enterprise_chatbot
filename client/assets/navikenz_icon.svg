@@ -1,0 +1,7 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Navikenz icon">
+  <rect width="512" height="512" rx="96" fill="#F3F5F7"/>
+  <path d="M104 384V128h38l128 107V128h62v256h-37L166 276v108h-62z" fill="#1F4F64"/>
+  <path d="M292 384V128h63v105l89-68h68l-106 80 106 139h-76l-81-107v107h-63z" fill="#8A2422"/>
+  <path d="M332 168h180l-37 29H295z" fill="#8A2422" opacity=".92"/>
+  <path d="M292 312h220l-38 30H292z" fill="#1F4F64" opacity=".96"/>
+</svg>

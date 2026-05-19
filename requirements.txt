@@ -14,3 +14,5 @@ passlib
 python-docx
 llama-index
 google-genai
+redis>=5.0.0
+streamlit>=1.36.0

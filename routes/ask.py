@@ -8,6 +8,7 @@ from .auth import get_current_user
 from services.database.models import Department, User
 from services.retriever import retrieve_top_k_chunks
 from services.llm import query_llm_with_context
+from services.cache import build_cache_key, get_cached_answer, set_cached_answer
 
 import config
 
@@ -23,6 +24,7 @@ class AskRequest(BaseModel):
 class SourceMetadata(BaseModel):
     source: str
     page_number: Optional[str] = None
+    distance_score: Optional[float] = None
 
 class AskResponse(BaseModel):
     answer: str
@@ -44,6 +46,14 @@ async def ask_question(request: AskRequest, db: Session = Depends(get_db), curre
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Access restricted."
         )
+
+    cache_key = build_cache_key(
+        query=request.query,
+        department_id=request.department_id
+    )
+    cached_response = get_cached_answer(cache_key)
+    if cached_response:
+        return AskResponse(**cached_response)
     
     nodes = retrieve_top_k_chunks(
         query=request.query,
@@ -88,9 +98,17 @@ async def ask_question(request: AskRequest, db: Session = Depends(get_db), curre
 
     sources_list = list(unique_sources.values())
 
-    return AskResponse(
+    response_payload = AskResponse(
         answer=llm_response.get("answer", ""),
         status=llm_response.get("status", "sufficient"),
         clarifying_questions=llm_response.get("questions", []),
         sources=sources_list
     )
+
+    set_cached_answer(
+        cache_key=cache_key,
+        payload=response_payload.model_dump(),
+        ttl_seconds=config.CACHE_TTL_SECONDS
+    )
+
+    return response_payload
