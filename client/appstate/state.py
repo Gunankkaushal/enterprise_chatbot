@@ -9,6 +9,8 @@ DEFAULT_STATE = {
     "department_id": None,
     "chat_history": [],
     "admin_chat_history": [],
+    "chat_history_by_user_dept": {},
+    "admin_chat_history_by_dept": {},
 }
 
 

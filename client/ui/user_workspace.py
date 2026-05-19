@@ -18,6 +18,10 @@ def _render_sources(sources):
             st.write(f"- {src} (Page: {page}, Score: {score})")
 
 
+def _user_history_key(user_email: str, department_id: int) -> str:
+    return f"user:{user_email}:dept:{department_id}"
+
+
 def render_user_workspace() -> None:
     c1, c2 = st.columns([3, 2])
     c1.markdown("<h1 class='main-title'>Employee Workspace</h1>", unsafe_allow_html=True)
@@ -35,9 +39,17 @@ def render_user_workspace() -> None:
         st.error("No department is mapped to this user.")
         return
 
+    history_store = st.session_state.setdefault("chat_history_by_user_dept", {})
+    history_key = _user_history_key(st.session_state["user_email"], int(department_id))
+    current_history = history_store.setdefault(history_key, [])
+
+    if st.button("Clear Chat History", key="clear_user_chat_history"):
+        history_store[history_key] = []
+        st.rerun()
+
     query = st.chat_input("Ask about policies, processes, or documents in your department")
     if query:
-        st.session_state["chat_history"].append({
+        current_history.append({
             "role": "user",
             "message": query,
             "sources": []
@@ -48,7 +60,7 @@ def render_user_workspace() -> None:
                 query=query,
                 department_id=int(department_id)
             )
-            st.session_state["chat_history"].append({
+            current_history.append({
                 "role": "assistant",
                 "message": response.get("answer", ""),
                 "status": response.get("status", ""),
@@ -64,7 +76,7 @@ def render_user_workspace() -> None:
         except Exception as exc:
             st.error(f"Ask failed: {exc}")
 
-    for item in st.session_state["chat_history"]:
+    for item in current_history:
         with st.chat_message(item["role"]):
             st.markdown(item["message"])
             if item["role"] == "assistant":

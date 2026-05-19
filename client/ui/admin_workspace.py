@@ -13,6 +13,10 @@ from client.appsvc.admin_ops import (
 from client.appsvc.api_client import ask_question, create_department, register_user, upload_document
 
 
+def _admin_history_key(admin_email: str, department_id: int) -> str:
+    return f"admin:{admin_email}:dept:{department_id}"
+
+
 def _tab_dashboard() -> None:
     st.subheader("Platform Snapshot")
     stats = get_dashboard_stats()
@@ -170,10 +174,17 @@ def _tab_admin_chatbot() -> None:
     department_map = {f"{d.id} - {d.name}": d.id for d in departments}
     selected = st.selectbox("Department Scope", list(department_map.keys()), key="admin_chat_dep")
     selected_dep_id = department_map[selected]
+    history_store = st.session_state.setdefault("admin_chat_history_by_dept", {})
+    history_key = _admin_history_key(st.session_state["user_email"], int(selected_dep_id))
+    current_history = history_store.setdefault(history_key, [])
+
+    if st.button("Clear Chat History", key="clear_admin_chat_history"):
+        history_store[history_key] = []
+        st.rerun()
 
     query = st.chat_input("Ask a question as admin", key="admin_chat_input")
     if query:
-        st.session_state["admin_chat_history"].append({
+        current_history.append({
             "role": "user",
             "message": f"[Dept {selected_dep_id}] {query}",
             "sources": []
@@ -184,7 +195,7 @@ def _tab_admin_chatbot() -> None:
                 query=query,
                 department_id=int(selected_dep_id)
             )
-            st.session_state["admin_chat_history"].append({
+            current_history.append({
                 "role": "assistant",
                 "message": response.get("answer", ""),
                 "status": response.get("status", ""),
@@ -200,7 +211,7 @@ def _tab_admin_chatbot() -> None:
         except Exception as exc:
             st.error(f"Ask failed: {exc}")
 
-    for item in st.session_state["admin_chat_history"]:
+    for item in current_history:
         with st.chat_message(item["role"]):
             st.markdown(item["message"])
             if item["role"] == "assistant":
