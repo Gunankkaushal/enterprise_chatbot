@@ -5,8 +5,10 @@ requests>=2.32.0
 sqlalchemy
 pymupdf
 faiss-cpu>=1.8.0
-numpy>=1.26.0
-sentence-transformers>=2.7.0
+numpy>=1.26,<2.0
+sentence-transformers==2.7.0
+transformers==4.41.2
+torch==2.2.2
 pydantic
 pydantic[email]
 pyjwt
@@ -14,3 +16,5 @@ passlib
 python-docx
 llama-index
 google-genai
+redis>=5.0.0
+streamlit>=1.36.0

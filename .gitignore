@@ -4,4 +4,11 @@ __pycache__/
 store/
 *.db
 *.db-shm
-*.db-wal
+*.db-wal.venv/
+__pycache__/
+*.pyc
+
+.venv/
+app.db
+app.db-shm
+app.db-wal

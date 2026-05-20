@@ -72,7 +72,7 @@ def remove_headers_footers(pages_text: List[str]) -> Tuple[List[str], str]:
         footer_start_index = len(lines)
         for i in range(len(lines) - 1, -1, -1):
             normalized_line = normalize_line_for_comparison(lines[i])
-            if line.strip() and normalized_line not in common_footers:
+            if lines[i].strip() and normalized_line not in common_footers:
                 footer_start_index = i + 1
                 break
         
