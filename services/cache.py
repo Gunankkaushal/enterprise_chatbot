@@ -34,10 +34,15 @@ def _get_redis_client():
         return None
 
 
-def build_cache_key(query: str, department_id: int) -> str:
+def build_cache_key(query: str, target_indexes: str) -> str:
     normalized_query = " ".join(query.strip().lower().split())
     query_hash = hashlib.sha256(normalized_query.encode("utf-8")).hexdigest()
-    return f"ask_cache:dept:{department_id}:q:{query_hash}"
+    
+    # Strip spaces, quotes, and brackets to make it a clean Redis key
+    # e.g., "['public', 1]" becomes "public,1"
+    safe_targets = target_indexes.replace(" ", "").replace("'", "").replace('"', "").replace("[", "").replace("]", "")
+    
+    return f"ask_cache:targets:{safe_targets}:q:{query_hash}"
 
 
 def get_cached_answer(cache_key: str) -> Optional[Dict[str, Any]]:

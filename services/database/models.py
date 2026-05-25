@@ -49,7 +49,7 @@ class Document(Base):
     filepath = Column(String, nullable=False)
     file_hash = Column(String, unique=True, index=True)
     uploaded_by = Column(Integer, ForeignKey("users.id"))
-    department_id = Column(Integer, ForeignKey("departments.id"))
+    department_id = Column(Integer, ForeignKey("departments.id"), nullable=True) # set nullable=True for public documents
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
     department = relationship("Department", back_populates="documents")
